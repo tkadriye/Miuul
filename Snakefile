@@ -1,6 +1,7 @@
 rule all:
     input:
-            expand("output/blastn/G_intestinalis/{sp}.blastn", sp=["G_muris", "S_salmonicida"])
+        expand("output/blastn/G_intestinalis/{sp}.blastn",sp=["G_muris", "S_salmonicida"]),
+#expand("output/plot/tRNAscan/{sp}.svg", sp=["G_muris", "S_salmonicida", "G_intestinalis"])
 #rule tRNAscan_stats_wildcard:
 #   input:
 #       genome="resource/Genome/{genome}.fasta"
