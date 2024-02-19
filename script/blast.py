@@ -1,7 +1,5 @@
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
-
 
 blast_G_muris = pd.read_csv('/Users/Mukadder/PycharmProjects/Miuul/output/blastn/G_muris.blastn', sep='\t', header=None)
 blast_S_salmonicida = pd.read_csv('/Users/Mukadder/PycharmProjects/Miuul/output/blastn/S_salmonicida.blastn', sep='\t', header=None)
@@ -29,3 +27,4 @@ plt.ylabel('Bitscore')
 
 # Display the plot
 plt.show()
+
