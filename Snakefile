@@ -1,19 +1,15 @@
+from snakemake.io import directory
+
 rule all:
     input:
-        expand("output/blastn/G_intestinalis/{sp}.blastn",sp=["G_muris", "S_salmonicida"]),
-#expand("output/plot/tRNAscan/{sp}.svg", sp=["G_muris", "S_salmonicida", "G_intestinalis"])
-#rule tRNAscan_stats_wildcard:
-#   input:
-#       genome="resource/Genome/{genome}.fasta"
-  #  output:
-   #     tRNA="output/tRNAscan/{genome}.tRNA",
-#        stats="output/tRNAscan/{genome}.stats"
-#    params:
-#        threads=2
-#    conda:
-#        "env/env.yaml"
-#    script:
-#        "scripts/tRNAscan_stats.py"
+        #"output/tRNA_scan_result.txt",
+        #"output/G_intestinalis.tRNA",
+        #expand("output/tRNAscan/{sp}.tRNA", sp=["G_muris", "G_intestinalis"]),
+        #expand("output/blastn/G_intestinalis/{sp}.blastn",sp=["G_muris", "S_salmonicida"]),
+        #expand("output/orthofinder/{genome}.fasta", genome=["G_muris_aa", "G_intestinalis_aa", "S_salmonicida_aa"]),
+        "output/1_orthofinder/"
+
+
 rule makeblastdb:
     input:
         "resource/{type}/db/{db}.fasta"
@@ -44,4 +40,15 @@ rule blastn:
         db_prefix="output/{type}/db/{db}"
     script:
         "script/blastn.py"
+
+rule orthofinder:
+    input:
+        fasta = "resource/orthofinder/",
+    output:
+          directory('output/orthofinder/')
+    conda:
+        "env/env.yaml"
+    script:
+          "scripts/2_BioinformaticsTools/orthofinder.py"
+
 
