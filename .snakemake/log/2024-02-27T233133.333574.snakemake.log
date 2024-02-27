@@ -1,0 +1,7 @@
+Building DAG of jobs...
+MissingInputException in rule blastn in file C:\Users\Mukadder\PycharmProjects\Miuul\Snakefile, line 23:
+Missing input files for rule blastn:
+    output: output/blastn/V_anguillarum/P_damselae.blastn
+    wildcards: type=blastn, db=V_anguillarum, query=P_damselae
+    affected files:
+        resources/blastn/query/P_damselae.fasta

@@ -1,14 +1,24 @@
-from snakemake.io import directory
+from snakemake.utils import compress
 
 rule all:
-    input:
-        #"output/tRNA_scan_result.txt",
-        #"output/G_intestinalis.tRNA",
-        #expand("output/tRNAscan/{sp}.tRNA", sp=["G_muris", "G_intestinalis"]),
-        #expand("output/blastn/G_intestinalis/{sp}.blastn",sp=["G_muris", "S_salmonicida"]),
-        #expand("output/orthofinder/{genome}.fasta", genome=["G_muris_aa", "G_intestinalis_aa", "S_salmonicida_aa"]),
-        "output/1_orthofinder/"
+    input: expand('output/blastn/V_anguillarum/{sample}.done', sample=['P_damselae', 'V_cholera'])
 
+@compress
+    def blastn(wildcards):
+        query = f"resources/blastn/query/{wildcards.sample}.fasta"
+        database = "P_damselae.fasta"
+        output = f'output/blastn/V_anguillarum/{wildcards.sample}.blastn'
+    shell = """
+        {query} {database} | samtools view -F 984 -q 50 -o - > {output} && bgzip {output} && tabix {output}.gz
+    """
+rule blastn_multiple:
+    input:
+        query="{query}",
+        database="P_damselae.fasta"
+    output:
+        expand('output/blastn/V_anguillarum/{sample}.blastn', sample=["P_damselae", "V_cholera"])
+    shell:
+        '{input.query} {input.database} | samtools view -F 984 -q 50 -o - > {output} && bgzip {output} && tabix {output}.gz'
 
 rule makeblastdb:
     input:
@@ -25,6 +35,7 @@ rule makeblastdb:
         outname="output/{type}/db/{db}"
     shell:
         'makeblastdb -dbtype nucl -in {input} -out {params.outname}'
+
 rule blastn:
     input:
         query="resources/{type}/query/{query}.fasta",
@@ -41,14 +52,5 @@ rule blastn:
     script:
         "script/blastn.py"
 
-rule orthofinder:
-    input:
-        fasta = "resource/orthofinder/",
-    output:
-          directory('output/orthofinder/')
-    conda:
-        "env/env.yaml"
-    script:
-          "scripts/2_BioinformaticsTools/orthofinder.py"
 
 
